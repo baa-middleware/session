@@ -1,11 +1,11 @@
 package session
 
 import (
-	"github.com/go-baa/baa"
-	"encoding/gob"
 	"bytes"
-	"sync"
+	"encoding/gob"
 	"fmt"
+	"gopkg.in/baa.v1"
+	"sync"
 )
 
 type Session struct {
@@ -19,7 +19,7 @@ func (s *Session) ID() string {
 	return s.sid
 }
 
-func (s *Session) Get(key interface{}) (interface{}) {
+func (s *Session) Get(key interface{}) interface{} {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
 
@@ -66,8 +66,8 @@ func NewSession(provider Provider, sid string, data map[interface{}]interface{})
 
 	return &Session{
 		provider: provider,
-		sid: sid,
-		data: data,
+		sid:      sid,
+		data:     data,
 	}, nil
 }
 

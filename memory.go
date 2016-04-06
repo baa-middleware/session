@@ -1,10 +1,10 @@
 package session
 
 import (
-	"sync"
-	"time"
 	"container/list"
 	"fmt"
+	"sync"
+	"time"
 )
 
 type MemoryProvider struct {
@@ -86,9 +86,9 @@ func (p *MemoryProvider) Write(sid string, data map[interface{}]interface{}) err
 
 	p.bytes = bytes
 	p.data[sid] = p.list.PushBack(&item{
-		sid: sid,
+		sid:        sid,
 		lastAccess: time.Now(),
-		data: encoded,
+		data:       encoded,
 	})
 
 	return nil
@@ -116,7 +116,7 @@ func (p *MemoryProvider) GC() {
 			break
 		}
 
-		if elem.Value.(*item).lastAccess.Unix() + p.maxLifeTime < time.Now().Unix() {
+		if elem.Value.(*item).lastAccess.Unix()+p.maxLifeTime < time.Now().Unix() {
 			p.lock.RUnlock()
 			p.lock.Lock()
 			p.bytes -= int64(len(elem.Value.(*item).data))

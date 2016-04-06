@@ -22,16 +22,16 @@ func (p *RedisProvider) Init(maxLifeTime int64, options interface{}) error {
 	p.options = options.(Options)
 
 	client := redis.NewClient(&redis.Options{
-		Network: p.options.Network,
-		Addr: p.options.Addr,
-		Dialer: p.options.Dialer,
-		Password: p.options.Password,
-		DB: p.options.DB,
-		DialTimeout: p.options.DialTimeout,
-		ReadTimeout: p.options.ReadTimeout,
+		Network:      p.options.Network,
+		Addr:         p.options.Addr,
+		Dialer:       p.options.Dialer,
+		Password:     p.options.Password,
+		DB:           p.options.DB,
+		DialTimeout:  p.options.DialTimeout,
+		ReadTimeout:  p.options.ReadTimeout,
 		WriteTimeout: p.options.WriteTimeout,
-		PoolSize: p.options.PoolSize,
-		IdleTimeout: p.options.IdleTimeout,
+		PoolSize:     p.options.PoolSize,
+		IdleTimeout:  p.options.IdleTimeout,
 	})
 	err := client.Ping().Err()
 	if err != nil {
@@ -45,7 +45,7 @@ func (p *RedisProvider) Init(maxLifeTime int64, options interface{}) error {
 }
 
 func (p *RedisProvider) Exist(sid string) bool {
-	has, err := p.client.Exists(p.options.Prefix+sid).Result()
+	has, err := p.client.Exists(p.options.Prefix + sid).Result()
 	if err != nil {
 		return false
 	}
@@ -55,7 +55,7 @@ func (p *RedisProvider) Exist(sid string) bool {
 func (p *RedisProvider) Read(sid string) (*session.Session, error) {
 	psid := p.options.Prefix + sid
 	if !p.Exist(sid) {
-		if err := p.client.Set(psid, "", time.Second * time.Duration(p.maxLifeTime)).Err(); err != nil {
+		if err := p.client.Set(psid, "", time.Second*time.Duration(p.maxLifeTime)).Err(); err != nil {
 			return nil, err
 		}
 	}
@@ -84,9 +84,9 @@ func (p *RedisProvider) Write(sid string, data map[interface{}]interface{}) erro
 		return err
 	}
 	return p.client.Set(
-		p.options.Prefix + sid,
+		p.options.Prefix+sid,
 		string(encoded),
-		time.Second * time.Duration(p.maxLifeTime),
+		time.Second*time.Duration(p.maxLifeTime),
 	).Err()
 }
 

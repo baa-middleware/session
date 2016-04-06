@@ -2,26 +2,42 @@ package session
 
 import (
 	"fmt"
-	"time"
 	"math/rand"
+	"time"
 
-	"github.com/go-baa/baa"
+	"gopkg.in/baa.v1"
 )
 
 const letterBytes = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 const (
 	letterIdxBits = 6                    // 6 bits to represent a letter index
-	letterIdxMask = 1<<letterIdxBits-1   // All 1-bits, as many as letterIdxBits
-	letterIdxMax  = 63/letterIdxBits     // # of letter indices fitting in 63 bits
+	letterIdxMask = 1<<letterIdxBits - 1 // All 1-bits, as many as letterIdxBits
+	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
 
 type Manager struct {
-	options Options
+	options  Options
 	provider Provider
 }
 
 func NewManager(options Options) (*Manager, error) {
+	if len(options.Name) == 0 {
+		panic("session.NewManager(): name cannot be empty")
+	}
+
+	if options.IDLength == 0 {
+		options.IDLength = 16
+	}
+
+	if options.GCInterval == 0 {
+		if options.MaxLifeTime > 0 {
+			options.GCInterval = options.MaxLifeTime
+		} else {
+			options.GCInterval = 1440
+		}
+	}
+
 	if options.Provider == nil {
 		panic("session.NewManager(): provider option cannot be nil")
 	}
@@ -36,7 +52,7 @@ func NewManager(options Options) (*Manager, error) {
 	}
 
 	manager := &Manager{
-		options: options,
+		options:  options,
 		provider: provider,
 	}
 
@@ -76,7 +92,7 @@ func (m *Manager) GC() {
 
 func (m *Manager) startGC() {
 	m.GC()
-	time.AfterFunc(time.Duration(m.options.GCInterval) * time.Second, func() {
+	time.AfterFunc(time.Duration(m.options.GCInterval)*time.Second, func() {
 		m.startGC()
 	})
 }
