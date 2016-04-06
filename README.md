@@ -60,60 +60,51 @@ func main() {
 
 ## Configuration
 
-Name        string
-	IDLength    int
-	Provider    *ProviderOptions
-	Cookie      *CookieOptions
-	GCInterval  int64
-	MaxLifeTime int64
-
-### Global
-
-#### Name `string`
+### Name `string`
 
 session name
 
-#### IDLength `int`
+### IDLength `int`
 
 session id length, default is `16`
 
-#### Provider `*ProviderOptions`
+### Provider `*ProviderOptions`
 
 provider options
 
-##### Adapter `string`
+#### Adapter `string`
 
 provider adapter name, currently support `redis` and `memory`
 
-##### Config `interface{}`
+#### Config `interface{}`
  
 provider adapter config, each adapter has its own config
 
-#### Cookie `*CookieOptions`
+### Cookie `*CookieOptions`
 
 session cookie options
 
-##### Domain `string`
+#### Domain `string`
 
 cookie domain, default is `''`
 
-##### Path `string`
+#### Path `string`
 
 cookie path, default is `/`
 
-##### Secure `bool`
+#### Secure `bool`
 
-##### LifeTime `int64`
+#### LifeTime `int64`
 
 cookie life time, default is `0`, known as session cookie
 
-##### HttpOnly `bool`
+#### HttpOnly `bool`
 
-#### GCInterval `int64`
+### GCInterval `int64`
 
 garbage collection run interval, used for `memory` adapter only
 
-#### MaxLifeTime `int64`
+### MaxLifeTime `int64`
 
 After this number of seconds, stored data will be seen as 'garbage' and cleaned up by the garbage collection process
 
