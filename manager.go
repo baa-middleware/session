@@ -51,6 +51,10 @@ func NewManager(options Options) (*Manager, error) {
 		panic(fmt.Errorf("session.NewManager(): init provider '%s' error with config", options.Provider.Adapter))
 	}
 
+	if options.Cookie == nil {
+		options.Cookie = new(CookieOptions)
+	}
+
 	manager := &Manager{
 		options:  options,
 		provider: provider,

@@ -64,6 +64,10 @@ func NewSession(provider Provider, sid string, data map[interface{}]interface{})
 		return nil, fmt.Errorf("session.New(): invalid session id")
 	}
 
+	if data == nil {
+		data = make(map[interface{}]interface{})
+	}
+
 	return &Session{
 		provider: provider,
 		sid:      sid,
