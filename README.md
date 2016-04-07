@@ -15,7 +15,6 @@ package main
 import (
 	"gopkg.in/baa.v1"
 	"github.com/baa-middleware/session"
-	"github.com/baa-middleware/session/redis"
 )
 
 func main() {
@@ -23,7 +22,7 @@ func main() {
 	app := baa.New()
 
 	// use session middleware
-	redisOptions := redis.Options{}
+	redisOptions := session.RedisOptions{}
 	redisOptions.Addr = "127.0.0.1:6379"
 	redisOptions.Prefix = "Prefix:"
 

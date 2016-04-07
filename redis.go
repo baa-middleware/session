@@ -1,25 +1,24 @@
-package redis
+package session
 
 import (
 	"time"
 
-	"github.com/baa-middleware/session"
 	"gopkg.in/redis.v3"
 )
 
 type RedisProvider struct {
 	client      *redis.Client
 	maxLifeTime int64
-	options     Options
+	options     RedisOptions
 }
 
-type Options struct {
+type RedisOptions struct {
 	redis.Options
 	Prefix string
 }
 
 func (p *RedisProvider) Init(maxLifeTime int64, options interface{}) error {
-	p.options = options.(Options)
+	p.options = options.(RedisOptions)
 
 	client := redis.NewClient(&redis.Options{
 		Network:      p.options.Network,
@@ -52,7 +51,7 @@ func (p *RedisProvider) Exist(sid string) bool {
 	return has
 }
 
-func (p *RedisProvider) Read(sid string) (*session.Session, error) {
+func (p *RedisProvider) Read(sid string) (*Session, error) {
 	psid := p.options.Prefix + sid
 	if !p.Exist(sid) {
 		if err := p.client.Set(psid, "", time.Second*time.Duration(p.maxLifeTime)).Err(); err != nil {
@@ -69,17 +68,17 @@ func (p *RedisProvider) Read(sid string) (*session.Session, error) {
 	if len(raw) == 0 {
 		data = make(map[interface{}]interface{})
 	} else {
-		data, err = session.DecodeGob([]byte(raw))
+		data, err = DecodeGob([]byte(raw))
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	return session.NewSession(p, sid, data)
+	return NewSession(p, sid, data)
 }
 
 func (p *RedisProvider) Write(sid string, data map[interface{}]interface{}) error {
-	encoded, err := session.EncodeGob(data)
+	encoded, err := EncodeGob(data)
 	if err != nil {
 		return err
 	}
@@ -97,5 +96,5 @@ func (p *RedisProvider) Destroy(sid string) error {
 func (_ *RedisProvider) GC() {}
 
 func init() {
-	session.Register("redis", &RedisProvider{})
+	Register("redis", &RedisProvider{})
 }
