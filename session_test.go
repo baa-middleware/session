@@ -31,6 +31,11 @@ func TestSessionMiddleware(t *testing.T) {
 
 			count := session.Get("count").(int)
 			So(count, ShouldEqual, 1)
+
+			err = session.Delete("count")
+			So(err, ShouldBeNil)
+
+			So(session.Get("count"), ShouldBeNil)
 		})
 
 		w := request("GET", "/")
