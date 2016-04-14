@@ -52,7 +52,7 @@ func TestSessionMiddleware(t *testing.T) {
 			Name: "GSESSION",
 			Provider: &ProviderOptions{
 				Adapter: "redis",
-				Config: redisOptions,
+				Config:  redisOptions,
 			},
 			MaxLifeTime: 1440,
 		}))

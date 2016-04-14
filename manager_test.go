@@ -27,7 +27,7 @@ func TestSessionManager(t *testing.T) {
 		Convey("panic by provider adapter name", func() {
 			So(func() {
 				NewManager(Options{
-					Name: "SESSION",
+					Name:     "SESSION",
 					Provider: &ProviderOptions{},
 				})
 			}, ShouldPanic)
@@ -42,7 +42,7 @@ func TestSessionManager(t *testing.T) {
 					Name: "SESSION",
 					Provider: &ProviderOptions{
 						Adapter: "redis",
-						Config: redisOptions,
+						Config:  redisOptions,
 					},
 				})
 			}, ShouldPanic)
