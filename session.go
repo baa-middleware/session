@@ -89,7 +89,7 @@ func Middleware(option Options) baa.Handler {
 			panic("session.Start(): " + err.Error())
 		}
 
-		// SetDI allows reference session instance duration a request
+		// allows reference session instance in context
 		c.Set("session", session)
 
 		c.Next()
