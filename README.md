@@ -37,7 +37,7 @@ func main() {
 	// router
 	app.Get("/", func(c *baa.Context) {
 		// get the session handler
-		session := c.Baa().GetDI("session").(*session.Session)
+		session := c.Get("session").(*session.Session)
 
 		// get
 		session.Get("key")

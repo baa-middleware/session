@@ -24,7 +24,7 @@ func TestSessionMiddleware(t *testing.T) {
 
 		app.Get("/", func(c *baa.Context) {
 			// get the session handler
-			session := c.Baa().GetDI("session").(*Session)
+			session := c.Get("session").(*Session)
 
 			err := session.Set("count", 1)
 			So(err, ShouldBeNil)
@@ -59,7 +59,7 @@ func TestSessionMiddleware(t *testing.T) {
 
 		app.Get("/", func(c *baa.Context) {
 			// get the session handler
-			session := c.Baa().GetDI("session").(*Session)
+			session := c.Get("session").(*Session)
 
 			So(session.ID(), ShouldNotBeNil)
 

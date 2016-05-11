@@ -90,7 +90,7 @@ func Middleware(option Options) baa.Handler {
 		}
 
 		// SetDI allows reference session instance duration a request
-		c.Baa().SetDI("session", session)
+		c.Set("session", session)
 
 		c.Next()
 
