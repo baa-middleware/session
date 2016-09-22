@@ -115,10 +115,13 @@ func Middleware(option Options) baa.Handler {
 }
 
 func EncodeGob(object map[interface{}]interface{}) ([]byte, error) {
-	buf := bytes.NewBuffer(nil)
-	err := gob.NewEncoder(buf).Encode(object)
-
-	return buf.Bytes(), err
+	buf := new(bytes.Buffer)
+	enc := gob.NewEncoder(buf)
+	err := enc.Encode(object)
+	if err == nil {
+		return buf.Bytes(), nil
+	}
+	return nil, err
 }
 
 func DecodeGob(encoded []byte) (out map[interface{}]interface{}, err error) {
