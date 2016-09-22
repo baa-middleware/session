@@ -54,6 +54,9 @@ func (s *Session) Destroy() error {
 }
 
 func (s *Session) Close() error {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	return s.provider.Write(s.sid, s.data)
 }
 
@@ -112,12 +115,6 @@ func Middleware(option Options) baa.Handler {
 }
 
 func EncodeGob(object map[interface{}]interface{}) ([]byte, error) {
-	// Register key and value type in order to encode without error
-	for key, value := range object {
-		gob.Register(key)
-		gob.Register(value)
-	}
-
 	buf := bytes.NewBuffer(nil)
 	err := gob.NewEncoder(buf).Encode(object)
 
