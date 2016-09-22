@@ -4,8 +4,10 @@ import (
 	"bytes"
 	"encoding/gob"
 	"fmt"
-	"gopkg.in/baa.v1"
+	"regexp"
 	"sync"
+
+	"gopkg.in/baa.v1"
 )
 
 type Session struct {
@@ -82,7 +84,15 @@ func Middleware(option Options) baa.Handler {
 	}
 	go manager.startGC()
 
+	var reStatic = regexp.MustCompile(`\.(jpeg|jpg|png|gif|ico|js|css|txt|zip)$`)
+
 	return func(c *baa.Context) {
+		// skip static request
+		if reStatic.MatchString(c.Req.URL.Path) {
+			c.Next()
+			return
+		}
+
 		// Start session
 		session, err := manager.Start(c)
 		if err != nil {
