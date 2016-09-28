@@ -80,7 +80,7 @@ func NewSession(provider Provider, sid string, data map[interface{}]interface{})
 	}, nil
 }
 
-func Middleware(option Options) baa.Handler {
+func Middleware(option Options) baa.HandlerFunc {
 	manager, err := NewManager(option)
 	if err != nil {
 		panic(err)
