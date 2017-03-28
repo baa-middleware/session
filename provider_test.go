@@ -2,8 +2,9 @@ package session
 
 import (
 	"container/list"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestSessionProvider(t *testing.T) {

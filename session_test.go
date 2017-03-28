@@ -1,11 +1,12 @@
 package session
 
 import (
-	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/baa.v1"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	. "github.com/smartystreets/goconvey/convey"
+	"gopkg.in/baa.v1"
 )
 
 var app = baa.New()

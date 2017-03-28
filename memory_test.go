@@ -2,9 +2,10 @@ package session
 
 import (
 	"container/list"
-	. "github.com/smartystreets/goconvey/convey"
 	"testing"
 	"time"
+
+	. "github.com/smartystreets/goconvey/convey"
 )
 
 func TestSessionMemoryProvider(t *testing.T) {

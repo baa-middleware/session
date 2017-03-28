@@ -6,17 +6,20 @@ import (
 	"gopkg.in/redis.v3"
 )
 
+// RedisProvider redis session provider
 type RedisProvider struct {
 	client      *redis.Client
 	maxLifeTime int64
 	options     RedisOptions
 }
 
+// RedisOptions redis session provider options
 type RedisOptions struct {
 	redis.Options
 	Prefix string
 }
 
+// Init initialize provider
 func (p *RedisProvider) Init(maxLifeTime int64, options interface{}) error {
 	p.options = options.(RedisOptions)
 
@@ -43,6 +46,7 @@ func (p *RedisProvider) Init(maxLifeTime int64, options interface{}) error {
 	return nil
 }
 
+// Exist check session id is exist
 func (p *RedisProvider) Exist(sid string) bool {
 	has, err := p.client.Exists(p.options.Prefix + sid).Result()
 	if err != nil {
@@ -51,6 +55,7 @@ func (p *RedisProvider) Exist(sid string) bool {
 	return has
 }
 
+// Read read session data from provider
 func (p *RedisProvider) Read(sid string) (*Session, error) {
 	psid := p.options.Prefix + sid
 	if !p.Exist(sid) {
@@ -77,6 +82,7 @@ func (p *RedisProvider) Read(sid string) (*Session, error) {
 	return NewSession(p, sid, data)
 }
 
+// Write write session data to provider
 func (p *RedisProvider) Write(sid string, data map[interface{}]interface{}) error {
 	encoded, err := EncodeGob(data)
 	if err != nil {
@@ -89,11 +95,13 @@ func (p *RedisProvider) Write(sid string, data map[interface{}]interface{}) erro
 	).Err()
 }
 
+// Destroy destroy session id from provider
 func (p *RedisProvider) Destroy(sid string) error {
 	return p.client.Del(p.options.Prefix + sid).Err()
 }
 
-func (_ *RedisProvider) GC() {}
+// GC calls GC to clean expired sessions
+func (p *RedisProvider) GC() {}
 
 func init() {
 	Register("redis", &RedisProvider{})

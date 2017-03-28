@@ -1,5 +1,6 @@
 package session
 
+// Options session manager options
 type Options struct {
 	Name        string
 	IDLength    int
@@ -11,6 +12,7 @@ type Options struct {
 	MaxLifeTime int64
 }
 
+// CookieOptions session manager cookie options
 type CookieOptions struct {
 	Domain   string
 	Path     string
@@ -19,6 +21,7 @@ type CookieOptions struct {
 	HttpOnly bool
 }
 
+// ProviderOptions session manager provider options
 type ProviderOptions struct {
 	Adapter string
 	Config  interface{}

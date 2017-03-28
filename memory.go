@@ -7,6 +7,7 @@ import (
 	"time"
 )
 
+// MemoryProvider memory session provider
 type MemoryProvider struct {
 	maxLifeTime int64
 	lock        sync.RWMutex
@@ -16,6 +17,7 @@ type MemoryProvider struct {
 	options     MemoryOptions
 }
 
+// MemoryOptions memory session provider options
 type MemoryOptions struct {
 	BytesLimit int64
 }
@@ -26,12 +28,14 @@ type item struct {
 	data       []byte
 }
 
+// Init initialize provider
 func (p *MemoryProvider) Init(maxLifeTime int64, options interface{}) error {
 	p.maxLifeTime = maxLifeTime
 	p.options = options.(MemoryOptions)
 	return nil
 }
 
+// Exist check session id is exist
 func (p *MemoryProvider) Exist(sid string) bool {
 	p.lock.RLock()
 	defer p.lock.RUnlock()
@@ -39,6 +43,7 @@ func (p *MemoryProvider) Exist(sid string) bool {
 	return ok
 }
 
+// Read read session data from provider
 func (p *MemoryProvider) Read(sid string) (*Session, error) {
 	p.lock.RLock()
 	elem, ok := p.data[sid]
@@ -70,6 +75,7 @@ func (p *MemoryProvider) touch(sid string) error {
 	return nil
 }
 
+// Write write session data to provider
 func (p *MemoryProvider) Write(sid string, data map[interface{}]interface{}) error {
 	p.lock.Lock()
 	defer p.lock.Unlock()
@@ -94,6 +100,7 @@ func (p *MemoryProvider) Write(sid string, data map[interface{}]interface{}) err
 	return nil
 }
 
+// Destroy destroy session id from provider
 func (p *MemoryProvider) Destroy(sid string) error {
 	p.lock.Lock()
 	defer p.lock.Unlock()
@@ -107,6 +114,7 @@ func (p *MemoryProvider) Destroy(sid string) error {
 	return nil
 }
 
+// GC calls GC to clean expired sessions
 func (p *MemoryProvider) GC() {
 	p.lock.RLock()
 

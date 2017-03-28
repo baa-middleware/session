@@ -16,11 +16,13 @@ const (
 	letterIdxMax  = 63 / letterIdxBits   // # of letter indices fitting in 63 bits
 )
 
+// Manager session manager
 type Manager struct {
 	options  Options
 	provider Provider
 }
 
+// NewManager create a new session manager
 func NewManager(options Options) (*Manager, error) {
 	if len(options.Name) == 0 {
 		panic("session.NewManager(): name cannot be empty")
@@ -63,6 +65,7 @@ func NewManager(options Options) (*Manager, error) {
 	return manager, nil
 }
 
+// Start begin session manager
 func (m *Manager) Start(c *baa.Context) (*Session, error) {
 	var session *Session
 
@@ -71,7 +74,7 @@ func (m *Manager) Start(c *baa.Context) (*Session, error) {
 		return m.provider.Read(sid)
 	}
 
-	sid = m.sessionId()
+	sid = m.sessionID()
 	session, err := m.provider.Read(sid)
 	if err != nil {
 		return nil, err
@@ -90,6 +93,7 @@ func (m *Manager) Start(c *baa.Context) (*Session, error) {
 	return session, nil
 }
 
+// GC ...
 func (m *Manager) GC() {
 	m.provider.GC()
 }
@@ -101,7 +105,7 @@ func (m *Manager) startGC() {
 	})
 }
 
-func (m *Manager) sessionId() string {
+func (m *Manager) sessionID() string {
 	return randString(m.options.IDLength)
 }
 

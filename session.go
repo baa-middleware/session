@@ -10,6 +10,7 @@ import (
 	"gopkg.in/baa.v1"
 )
 
+// Session session bag
 type Session struct {
 	provider Provider
 	sid      string
@@ -17,10 +18,12 @@ type Session struct {
 	data     map[interface{}]interface{}
 }
 
+// ID returns session id
 func (s *Session) ID() string {
 	return s.sid
 }
 
+// Get get a value by the key from session
 func (s *Session) Get(key interface{}) interface{} {
 	s.lock.RLock()
 	defer s.lock.RUnlock()
@@ -28,6 +31,7 @@ func (s *Session) Get(key interface{}) interface{} {
 	return s.data[key]
 }
 
+// Set set a value by the key to session
 func (s *Session) Set(key interface{}, val interface{}) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -36,6 +40,7 @@ func (s *Session) Set(key interface{}, val interface{}) error {
 	return nil
 }
 
+// Delete delete a key from session
 func (s *Session) Delete(key interface{}) error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -53,6 +58,7 @@ func (s *Session) Destroy() error {
 	return nil
 }
 
+// Close save data in session
 func (s *Session) Close() error {
 	s.lock.Lock()
 	defer s.lock.Unlock()
@@ -60,6 +66,7 @@ func (s *Session) Close() error {
 	return s.provider.Write(s.sid, s.data)
 }
 
+// NewSession create a session
 func NewSession(provider Provider, sid string, data map[interface{}]interface{}) (*Session, error) {
 	if provider == nil {
 		return nil, fmt.Errorf("session.New(): provider cannot be nil")
@@ -80,6 +87,7 @@ func NewSession(provider Provider, sid string, data map[interface{}]interface{})
 	}, nil
 }
 
+// Middleware returns a middleware for baa
 func Middleware(option Options) baa.HandlerFunc {
 	manager, err := NewManager(option)
 	if err != nil {
@@ -114,6 +122,7 @@ func Middleware(option Options) baa.HandlerFunc {
 	}
 }
 
+// EncodeGob encode data by gob
 func EncodeGob(object map[interface{}]interface{}) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	enc := gob.NewEncoder(buf)
@@ -124,6 +133,7 @@ func EncodeGob(object map[interface{}]interface{}) ([]byte, error) {
 	return nil, err
 }
 
+// DecodeGob decode data by gob
 func DecodeGob(encoded []byte) (out map[interface{}]interface{}, err error) {
 	buf := bytes.NewBuffer(encoded)
 	err = gob.NewDecoder(buf).Decode(&out)
