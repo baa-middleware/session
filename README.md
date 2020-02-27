@@ -13,7 +13,7 @@ baa middleware for provides the session management.
 package main
 
 import (
-	"gopkg.in/baa.v1"
+	"github.com/go-baa/baa"
 	"github.com/baa-middleware/session"
 )
 

@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"sync"
 
-	"gopkg.in/baa.v1"
+	"github.com/go-baa/baa"
 )
 
 // Session session bag

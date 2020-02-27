@@ -5,8 +5,8 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/go-baa/baa"
 	. "github.com/smartystreets/goconvey/convey"
-	"gopkg.in/baa.v1"
 )
 
 var app = baa.New()
